@@ -5,8 +5,7 @@
 ## Features
 
 - **Navbar Quick-Switcher**: Click the palette icon in the navbar to access the theme gallery
-- **8 Built-in Ghostty Themes**: Nord, Gruvbox Dark, Catppuccin Mocha/Latte, Dracula, Atom One Dark, GitHub Dark, Builtin Solarized Dark
-- **Live Preview**: Color swatches show theme colors before applying
+- **453 Built-in Ghostty Themes**: All themes from Ghostty's theme library
 - **Instant Hot-Reload**: Ghostty themes apply via SIGUSR2 signal without restart
 - **Persistent Selection**: Remembers last selected theme across sessions
 
@@ -32,35 +31,28 @@
 
 ## Working Principle
 
-Dank Terminal Theme uses Ghostty's native `theme` configuration option to switch between built-in themes. This leverages Ghostty's own theme system rather than writing custom color files.
+Dank Terminal Theme uses Ghostty's native `theme` configuration option to switch between built-in themes. This leverages Ghostty's own theme system directly.
 
 ### Theme Application Flow
 
 1. User selects a theme in Dank Terminal Theme's navbar popout
-2. Dank Terminal Theme updates `theme = <theme_name>` in Ghostty's config using sed
+2. Dank Terminal Theme updates `theme = <theme_name>` in Ghostty's config
 3. Dank Terminal Theme sends `SIGUSR2` to all Ghostty processes
 4. Ghostty's signal handler triggers a config reload and applies the new theme
 5. Theme changes apply instantly without restarting Ghostty
 
-### File Structure
-
-```
-~/.config/ghostty/
-└── config                      # Ghostty main config
-                                 # Contains: theme = <built-in-theme-name>
-```
-
 ### Available Themes
 
-The plugin provides these Ghostty built-in themes:
+The plugin provides all 453 Ghostty built-in themes including:
 - **Nord** - Arctic north-inspired colors
 - **Gruvbox Dark** - Retro groove colors
-- **Catppuccin Mocha** - Dark mode with pastel accents
-- **Catppuccin Latte** - Light mode with pastel accents
+- **Catppuccin Mocha/Latte/Frappe/Macchiato** - Pastel themes
 - **Dracula** - Dark mode with vibrant colors
-- **Atom One Dark** - One Dark color scheme
-- **GitHub Dark** - GitHub's dark theme
-- **Builtin Solarized Dark** - Solarized dark palette
+- **TokyoNight** - Japanese night-inspired
+- **Rose Pine** - Subtle purple themes
+- **GitHub Dark/Light** - GitHub's official themes
+- **One Half Dark/Light** - VS Code style
+- And 445 more themes...
 
 ### Ghostty Signal Handling
 
@@ -73,7 +65,7 @@ DankTerminalTheme/
 ├── plugin.json           # Plugin manifest (name, author, version, permissions)
 ├── DankTerminalTheme.qml            # Main widget component
 │                          # - applyTheme(): sets theme config + signals ghostty
-│                          # - 8 built-in Ghostty themes with preview colors
+│                          # - 453 built-in Ghostty themes
 │                          # - Navbar pills (horizontal/vertical)
 │                          # - Popout UI with prev/next/all navigation
 ├── DankTerminalThemeSettings.qml    # Settings panel (basic stub)
@@ -90,4 +82,4 @@ Dank Terminal Theme requires:
 
 - Themes sourced from Ghostty's built-in theme library (iterm2-color-schemes)
 - Plugin: Dank Terminal Theme by EduarD3V
-- Version: 1.0.1-beta.2
+- Version: 1.0.2
