@@ -1,0 +1,13 @@
+{
+  "id": "dankterminaltheme",
+  "name": "Dank Terminal Theme",
+  "description": "Real-time Ghostty theme management from the DMS navbar",
+  "version": "1.0.1-beta.2",
+  "author": "EduarD3V",
+  "icon": "palette",
+  "type": "widget",
+  "component": "./DankTerminalTheme.qml",
+  "settings": "./DankTerminalThemeSettings.qml",
+  "permissions": ["settings_read", "settings_write", "process"],
+  "requires_dms": ">=1.4.0"
+}
