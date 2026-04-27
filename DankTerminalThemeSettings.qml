@@ -1,4 +1,3 @@
-// DankTerminalThemeSettings.qml
 import QtQuick
 import qs.Common
 import qs.Modules.Plugins
@@ -16,7 +15,7 @@ PluginSettings {
     }
 
     StyledText {
-        text: "Real-time Ghostty theme management with 24 curated themes"
+        text: "Real-time Ghostty theme management with 98 built-in themes"
         font.pixelSize: Theme.fontSizeSmall
         color: Theme.surfaceVariantText
         width: parent.width
@@ -37,17 +36,18 @@ PluginSettings {
     }
 
     ToggleSetting {
-        settingKey: "showThemeNameInBar"
-        label: "Show Theme Name in Bar"
-        description: "Display the current theme name next to the icon"
-        defaultValue: true
+        settingKey: "showAllThemes"
+        label: "Show All Themes"
+        description: "Show all 98 themes instead of the curated 21"
+        defaultValue: false
     }
 
-    ToggleSetting {
-        settingKey: "showColorPreview"
-        label: "Show Color Preview"
-        description: "Display theme color palette in the popout"
-        defaultValue: true
+    SelectionSetting {
+        settingKey: "gridColumns"
+        label: "Grid Columns"
+        description: "Number of columns in the theme grid"
+        values: ["3", "4", "5", "6"]
+        defaultIndex: 1
     }
 
     StringSetting {
@@ -72,7 +72,7 @@ PluginSettings {
     }
 
     StyledText {
-        text: "• Click the palette icon in the bar to open the theme picker\n• Use arrows to cycle through themes or 'All' for grid view\n• Search by typing in the grid view\n• Themes apply instantly via SIGUSR2 signal to Ghostty"
+        text: "• Click the palette icon in the bar to open the theme picker\n• Use arrows to cycle through themes\n• Click a color swatch to apply that theme\n• Themes apply instantly via SIGUSR2 signal to Ghostty"
         font.pixelSize: Theme.fontSizeSmall
         color: Theme.surfaceVariantText
         width: parent.width
