@@ -20,9 +20,11 @@ PluginComponent {
         try {
             var h = process.env.HOME
             if (h && h.length > 0) return h
-            return "/home/" + (process.env.USER || "")
+            var u = process.env.USER
+            if (u && u.length > 0) return "/home/" + u
+            return "/root"
         } catch(e) {
-            return "/home/eduardez"
+            return "/root"
         }
     }
     readonly property string ghosttyConfigDir: homePath + "/.config/ghostty"
