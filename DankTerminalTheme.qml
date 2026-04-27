@@ -16,19 +16,11 @@ PluginComponent {
     property int gridColumns: parseInt(pluginData.gridColumns) || 4
     property bool showArrows: pluginData.showArrows !== false
 
-    readonly property string homePath: {
-        try {
-            var h = process.env.HOME
-            if (h && h.length > 0) return h
-            var u = process.env.USER
-            if (u && u.length > 0) return "/home/" + u
-            return "/root"
-        } catch(e) {
-            return "/root"
-        }
+    readonly property string ghosttyMainConfig: {
+        var customPath = pluginData.ghosttyConfigPath
+        if (customPath && customPath.length > 0) return customPath
+        return "~/.config/ghostty/config"
     }
-    readonly property string ghosttyConfigDir: homePath + "/.config/ghostty"
-    readonly property string ghosttyMainConfig: ghosttyConfigDir + "/config"
 
     readonly property var curatedThemes: [
         { id: "nord", name: "Nord", ghosttyName: "Nord", bg: "#2e3440", fg: "#d8dee9", accent: "#88c0d0" },
