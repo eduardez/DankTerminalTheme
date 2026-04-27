@@ -42,12 +42,24 @@ PluginSettings {
         defaultValue: false
     }
 
+    ToggleSetting {
+        settingKey: "showArrows"
+        label: "Show Navigation Arrows"
+        description: "Show prev/next arrows in the popout footer"
+        defaultValue: true
+    }
+
     SelectionSetting {
         settingKey: "gridColumns"
         label: "Grid Columns"
         description: "Number of columns in the theme grid"
-        values: ["3", "4", "5", "6"]
-        defaultIndex: 1
+        options: [
+            { label: "3", value: 3 },
+            { label: "4", value: 4 },
+            { label: "5", value: 5 },
+            { label: "6", value: 6 }
+        ]
+        defaultValue: "4"
     }
 
     StringSetting {

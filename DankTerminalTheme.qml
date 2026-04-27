@@ -13,7 +13,8 @@ PluginComponent {
 
     property string currentTheme: pluginData.currentTheme || "nord"
     property bool showAllThemes: pluginData.showAllThemes === true
-    property int gridColumns: pluginData.gridColumns || 4
+    property int gridColumns: parseInt(pluginData.gridColumns) || 4
+    property bool showArrows: pluginData.showArrows !== false
 
     readonly property string homePath: {
         try {
@@ -290,9 +291,10 @@ PluginComponent {
                     spacing: 0
                     width: popout.cw
                     height: 36
-
+                    visible: root.showArrows
                     Rectangle {
-                        width: parent.width / 2
+                        visible: root.showArrows
+                        width: root.showArrows ? parent.width / 2 : 0
                         height: parent.height
                         radius: 8
                         color: prevArea.containsMouse ? Theme.surfaceContainerHigh : "transparent"
@@ -300,8 +302,10 @@ PluginComponent {
                         MouseArea { id: prevArea; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: root.prevTheme() }
                     }
 
+
                     Rectangle {
-                        width: parent.width / 2
+                        visible: root.showArrows
+                        width: root.showArrows ? parent.width / 2 : 0
                         height: parent.height
                         radius: 8
                         color: nextArea.containsMouse ? Theme.surfaceContainerHigh : "transparent"
