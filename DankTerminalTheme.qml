@@ -18,280 +18,13 @@ PluginComponent {
     readonly property string homePath: {
         // Try to get home directory from environment
         try {
-            return process.env.HOME || (process.env.USER ? "/home/" + process.env.USER : "")
+            return process.env.HOME || "/home/" + process.env.USER
         } catch(e) {
-            return ""
+            return "/home/eduardez"  // fallback
         }
     }
     readonly property string ghosttyConfigDir: homePath + "/.config/ghostty"
     readonly property string ghosttyMainConfig: ghosttyConfigDir + "/config"
-    readonly property string ghosttySystemThemesDir: "/usr/share/ghostty/themes"
-    readonly property string ghosttyUserThemesDir: ghosttyConfigDir + "/themes"
-
-    // Cache for parsed theme colors (keyed by ghosttyName)
-    property var themeColorsCache: ({})
-
-    // Read and parse a ghostty theme file, returning an object with colors
-    // Returns null if theme file cannot be read
-    function readThemeColors(ghosttyName) {
-        // Check cache first
-        if (themeColorsCache[ghosttyName] !== undefined) {
-            return themeColorsCache[ghosttyName]
-        }
-
-        // Try to read from cache file created by bash script
-        try {
-            if (io && io.file) {
-                var cacheFile = "/tmp/ghostty_themes_cache.txt"
-                var content = io.file.read(cacheFile)
-                if (content) {
-                    parseThemesFromCache(content)
-                    if (themeColorsCache[ghosttyName] !== undefined) {
-                        return themeColorsCache[ghosttyName]
-                    }
-                }
-            }
-        } catch(e) {}
-
-        // Return defaults if not cached yet
-        return {
-            background: "#000000",
-            foreground: "#ffffff",
-            cursorColor: "#ffffff",
-            cursorText: "#000000",
-            selectionBackground: "#ffffff",
-            selectionForeground: "#000000",
-            palette: ["#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
-                      "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000"]
-        }
-    }
-
-    // Parse themes from cache content
-    function parseThemesFromCache(content) {
-        try {
-            var themeBlocks = content.split("---END---")
-            for (var i = 0; i < themeBlocks.length; i++) {
-                var block = themeBlocks[i].trim()
-                if (!block) continue
-                
-                var lines = block.split("\n")
-                if (lines.length < 2) continue
-                
-                var themeName = lines[0].trim().replace(/:$/, "")
-                if (!themeName) continue
-                
-                var colors = {
-                    background: "#000000",
-                    foreground: "#ffffff",
-                    cursorColor: "#ffffff",
-                    cursorText: "#000000",
-                    selectionBackground: "#ffffff",
-                    selectionForeground: "#000000",
-                    palette: ["#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
-                              "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000"]
-                }
-                
-                for (var j = 1; j < lines.length; j++) {
-                    var line = lines[j].trim()
-                    if (!line || line[0] === "#") continue
-                    
-                    var eqIndex = line.indexOf("=")
-                    if (eqIndex === -1) continue
-                    
-                    var key = line.substring(0, eqIndex).trim()
-                    var value = line.substring(eqIndex + 1).trim()
-                    
-                    if (key === "background") {
-                        colors.background = value
-                    } else if (key === "foreground") {
-                        colors.foreground = value
-                    } else if (key === "cursor-color") {
-                        colors.cursorColor = value
-                    } else if (key === "cursor-text") {
-                        colors.cursorText = value
-                    } else if (key === "selection-background") {
-                        colors.selectionBackground = value
-                    } else if (key === "selection-foreground") {
-                        colors.selectionForeground = value
-                    } else if (key.startsWith("palette")) {
-                        var paletteIndex = key.substring(7).trim()
-                        if (paletteIndex !== "" && !isNaN(paletteIndex)) {
-                            colors.palette[parseInt(paletteIndex)] = value
-                        }
-                    }
-                }
-                
-                themeColorsCache[themeName] = colors
-            }
-        } catch(e) {}
-    }
-
-    // Parse themes from cache file
-    function parseThemesFromCache() {
-        try {
-            var file = io.file.read("/tmp/ghostty_themes_cache.txt")
-            if (!file) return
-            
-            var themeBlocks = file.split("---END---")
-            for (var i = 0; i < themeBlocks.length; i++) {
-                var block = themeBlocks[i].trim()
-                if (!block) continue
-                
-                var lines = block.split("\n")
-                if (lines.length < 2) continue
-                
-                var themeName = lines[0].trim().replace(/:$/, "")
-                if (!themeName) continue
-                
-                var colors = {
-                    background: "#000000",
-                    foreground: "#ffffff",
-                    cursorColor: "#ffffff",
-                    cursorText: "#000000",
-                    selectionBackground: "#ffffff",
-                    selectionForeground: "#000000",
-                    palette: ["#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
-                              "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000"]
-                }
-                
-                for (var j = 1; j < lines.length; j++) {
-                    var line = lines[j].trim()
-                    if (!line || line[0] === "#") continue
-                    
-                    var eqIndex = line.indexOf("=")
-                    if (eqIndex === -1) continue
-                    
-                    var key = line.substring(0, eqIndex).trim()
-                    var value = line.substring(eqIndex + 1).trim()
-                    
-                    if (key === "background") {
-                        colors.background = value
-                    } else if (key === "foreground") {
-                        colors.foreground = value
-                    } else if (key === "cursor-color") {
-                        colors.cursorColor = value
-                    } else if (key === "cursor-text") {
-                        colors.cursorText = value
-                    } else if (key === "selection-background") {
-                        colors.selectionBackground = value
-                    } else if (key === "selection-foreground") {
-                        colors.selectionForeground = value
-                    } else if (key.startsWith("palette")) {
-                        var paletteIndex = key.substring(7).trim()
-                        if (paletteIndex !== "" && !isNaN(paletteIndex)) {
-                            colors.palette[parseInt(paletteIndex)] = value
-                        }
-                    }
-                }
-                
-                themeColorsCache[themeName] = colors
-            }
-        } catch(e) {}
-    }
-
-    function readThemeColors(ghosttyName) {
-        // Check cache first
-        if (themeColorsCache[ghosttyName] !== undefined) {
-            return themeColorsCache[ghosttyName]
-        }
-
-        // Return defaults if not cached yet
-        return {
-            background: "#000000",
-            foreground: "#ffffff",
-            cursorColor: "#ffffff",
-            cursorText: "#000000",
-            selectionBackground: "#ffffff",
-            selectionForeground: "#000000",
-            palette: ["#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
-                      "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000"]
-        }
-    }
-        })
-    }
-
-    // Parse the output from the bash command
-    function parseAllThemesOutput(output) {
-        var themeBlocks = output.split("---END---")
-        for (var i = 0; i < themeBlocks.length; i++) {
-            var block = themeBlocks[i].trim()
-            if (!block) continue
-            
-            var lines = block.split("\n")
-            if (lines.length < 2) continue
-            
-            var themeName = lines[0].trim().replace(/:$/, "")
-            if (!themeName) continue
-            
-            var colors = {
-                background: "#000000",
-                foreground: "#ffffff",
-                cursorColor: "#ffffff",
-                cursorText: "#000000",
-                selectionBackground: "#ffffff",
-                selectionForeground: "#000000",
-                palette: ["#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
-                          "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000"]
-            }
-            
-            for (var j = 1; j < lines.length; j++) {
-                var line = lines[j].trim()
-                if (!line || line[0] === "#") continue
-                
-                var eqIndex = line.indexOf("=")
-                if (eqIndex === -1) continue
-                
-                var key = line.substring(0, eqIndex).trim()
-                var value = line.substring(eqIndex + 1).trim()
-                
-                if (key === "background") {
-                    colors.background = value
-                } else if (key === "foreground") {
-                    colors.foreground = value
-                } else if (key === "cursor-color") {
-                    colors.cursorColor = value
-                } else if (key === "cursor-text") {
-                    colors.cursorText = value
-                } else if (key === "selection-background") {
-                    colors.selectionBackground = value
-                } else if (key === "selection-foreground") {
-                    colors.selectionForeground = value
-                } else if (key.startsWith("palette")) {
-                    var paletteIndex = key.substring(7).trim()
-                    if (paletteIndex !== "" && !isNaN(paletteIndex)) {
-                        colors.palette[parseInt(paletteIndex)] = value
-                    }
-                }
-            }
-            
-            themeColorsCache[themeName] = colors
-        }
-    }
-
-    function readThemeColors(ghosttyName) {
-        // Check cache first
-        if (themeColorsCache[ghosttyName] !== undefined) {
-            return themeColorsCache[ghosttyName]
-        }
-
-        // Return defaults if not cached yet
-        return {
-            background: "#000000",
-            foreground: "#ffffff",
-            cursorColor: "#ffffff",
-            cursorText: "#000000",
-            selectionBackground: "#ffffff",
-            selectionForeground: "#000000",
-            palette: ["#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000",
-                      "#000000","#000000","#000000","#000000","#000000","#000000","#000000","#000000"]
-        }
-    }
-
-    // Get a preview of the first 8 palette colors for a theme
-    function getThemePalettePreview(ghosttyName) {
-        var colors = readThemeColors(ghosttyName)
-        return colors.palette.slice(0, 8)
-    }
 
     // Ghostty built-in themes - ghosttyName must match `ghostty +list-themes` output
     readonly property var themes: [
@@ -786,9 +519,9 @@ PluginComponent {
         var ghosttyName = t.ghosttyName
 
         // Build and execute theme change via Quickshell.execDetached
-        // Remove existing theme lines and append at end (after all config-file entries)
+        // Remove existing theme lines, config-file theme overrides, and append at end
         var bashCmd = 
-            "sed -i '/^theme = /d' '" + ghosttyMainConfig + "'; " +
+            "sed -i -e '/^theme = /d' -e '/^config-file = themes\\//d' '" + ghosttyMainConfig + "'; " +
             "echo 'theme = " + ghosttyName + "' >> '" + ghosttyMainConfig + "'"
 
         Quickshell.execDetached(["bash", "-c", bashCmd])
@@ -835,118 +568,37 @@ PluginComponent {
                 id: mainColumn
                 spacing: 0
 
-                // MAIN VIEW - Golden ratio color preview (no text)
+                // MAIN VIEW - Theme name display
                 Item {
                     visible: !root.showGridView
                     width: popout.contentWidth
-                    height: 200
+                    height: 160
 
-                    property var themeColors: root.readThemeColors(root.theme.ghosttyName)
-                    // Golden ratio constants
-                    readonly property real phi: 1.618
-                    readonly property real baseSize: 28
-                    readonly property real smallSize: baseSize / phi
-                    readonly property real tinySize: smallSize / phi
-
-                    // Golden spiral positions (x, y, size) for 22 colors
-                    // Arranged in golden ratio proportions
-                    Item {
+                    Column {
+                        spacing: Theme.spacingM
                         anchors.centerIn: parent
 
-                        // Center: Background (largest)
-                        Rectangle {
-                            x: parent.width / 2 - baseSize / 2 + 30
-                            y: parent.height / 2 - baseSize / 2 - 20
-                            width: baseSize; height: baseSize
-                            radius: 6
-                            color: themeColors.background
-                            border.width: 1; border.color: Theme.outline
+                        StyledText {
+                            text: root.theme.name
+                            font.pixelSize: 24; font.weight: Font.Bold
+                            color: Theme.surfaceText
+                            anchors.horizontalCenter: parent.horizontalCenter
                         }
 
-                        // Foreground (golden size)
-                        Rectangle {
-                            x: parent.width / 2 - baseSize / 2 + 30 + baseSize + 4
-                            y: parent.height / 2 - baseSize / 2 - 20
-                            width: smallSize; height: baseSize
-                            radius: 6
-                            color: themeColors.foreground
-                            border.width: 1; border.color: Theme.outline
+                        StyledText {
+                            text: root.theme.ghosttyName
+                            font.pixelSize: 12
+                            color: Theme.surfaceVariantText
+                            anchors.horizontalCenter: parent.horizontalCenter
                         }
 
-                        // Cursor color (tiny)
-                        Rectangle {
-                            x: parent.width / 2 - baseSize / 2 + 30 + baseSize + 4 + smallSize + 4
-                            y: parent.height / 2 - baseSize / 2 - 20
-                            width: tinySize; height: tinySize
-                            radius: 4
-                            color: themeColors.cursorColor
-                            border.width: 1; border.color: Theme.outline
+                        StyledText {
+                            text: "Click 'All' to switch themes"
+                            font.pixelSize: 10
+                            color: Theme.outline
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.topMargin: Theme.spacingL
                         }
-
-                        // Cursor text (tiny)
-                        Rectangle {
-                            x: parent.width / 2 - baseSize / 2 + 30 + baseSize + 4 + smallSize + 4
-                            y: parent.height / 2 - baseSize / 2 - 20 + tinySize + 4
-                            width: tinySize; height: tinySize
-                            radius: 4
-                            color: themeColors.cursorText
-                            border.width: 1; border.color: Theme.outline
-                        }
-
-                        // Selection bg (golden spiral next)
-                        Rectangle {
-                            x: parent.width / 2 - baseSize / 2 + 30
-                            y: parent.height / 2 - baseSize / 2 + baseSize + 6
-                            width: smallSize; height: smallSize
-                            radius: 5
-                            color: themeColors.selectionBackground
-                            border.width: 1; border.color: Theme.outline
-                        }
-
-                        // Selection fg (smaller)
-                        Rectangle {
-                            x: parent.width / 2 - baseSize / 2 + 30 + smallSize + 4
-                            y: parent.height / 2 - baseSize / 2 + baseSize + 6
-                            width: smallSize / phi; height: smallSize / phi
-                            radius: 4
-                            color: themeColors.selectionForeground
-                            border.width: 1; border.color: Theme.outline
-                        }
-
-                        // Palette 0-7 (golden row)
-                        Repeater {
-                            model: 8
-                            Rectangle {
-                                x: parent.width / 2 - (8 * (smallSize + 2)) / 2 + index * (smallSize + 2)
-                                y: parent.height / 2 - baseSize / 2 + 5
-                                width: smallSize; height: smallSize
-                                radius: 4
-                                color: themeColors.palette[index] || "#888888"
-                                border.width: 1; border.color: Theme.outline
-                            }
-                        }
-
-                        // Palette 8-15 (second golden row)
-                        Repeater {
-                            model: 8
-                            Rectangle {
-                                x: parent.width / 2 - (8 * (smallSize + 2)) / 2 + index * (smallSize + 2)
-                                y: parent.height / 2 - baseSize / 2 + 5 + smallSize + 6
-                                width: smallSize; height: smallSize
-                                radius: 4
-                                color: themeColors.palette[index + 8] || "#888888"
-                                border.width: 1; border.color: Theme.outline
-                            }
-                        }
-                    }
-
-                    StyledText {
-                        text: "Click 'All' to switch themes"
-                        font.pixelSize: 10
-                        color: Theme.outline
-                        anchors.bottom: parent.bottom
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.bottomMargin: 6
                     }
                 }
 
@@ -972,97 +624,31 @@ PluginComponent {
 
                                 delegate: Rectangle {
                                     width: popout.contentWidth
-                                    height: 68
+                                    height: 44
                                     radius: 10
                                     color: modelData.id === root.currentTheme ? Theme.primaryContainer : Theme.surfaceContainerHigh
                                     border.width: modelData.id === root.currentTheme ? 2 : 0
                                     border.color: Theme.primary || "#000000"
 
-                                    property var itemThemeColors: root.readThemeColors(modelData.ghosttyName)
-
                                     Row {
                                         spacing: 10
-                                        anchors.left: parent.left; anchors.leftMargin: 12
-                                        anchors.right: parent.right; anchors.rightMargin: 12
+                                        anchors.left: parent.left; anchors.leftMargin: 10
+                                        anchors.right: parent.right; anchors.rightMargin: 10
                                         anchors.verticalCenter: parent.verticalCenter
 
                                         DankIcon {
-                                            name: "palette"; size: 18; color: Theme.primary
+                                            name: "palette"; size: 20; color: Theme.primary
                                             anchors.verticalCenter: parent.verticalCenter
                                         }
 
-                                        Column {
-                                            spacing: 2
+                                        StyledText {
+                                            text: modelData.name; font.pixelSize: 14; font.weight: Font.Medium
+                                            color: modelData.id === root.currentTheme ? Theme.onPrimaryContainer : Theme.surfaceText
                                             anchors.verticalCenter: parent.verticalCenter
-
-                                            StyledText {
-                                                text: modelData.name; font.pixelSize: 13; font.weight: Font.Medium
-                                                color: modelData.id === root.currentTheme ? Theme.onPrimaryContainer : Theme.surfaceText
-                                            }
-
-                                            // Color swatches row: bg, fg, cursor, cursorText, selectionBg, selectionFg
-                                            Row {
-                                                spacing: 2
-
-                                                // Background
-                                                Rectangle {
-                                                    width: 12; height: 12; radius: 2
-                                                    color: parent.parent.parent.itemThemeColors.background
-                                                    border.width: 1; border.color: Theme.outline
-                                                }
-                                                // Foreground
-                                                Rectangle {
-                                                    width: 12; height: 12; radius: 2
-                                                    color: parent.parent.parent.itemThemeColors.foreground
-                                                    border.width: 1; border.color: Theme.outline
-                                                }
-                                                // Cursor
-                                                Rectangle {
-                                                    width: 12; height: 12; radius: 2
-                                                    color: parent.parent.parent.itemThemeColors.cursorColor
-                                                    border.width: 1; border.color: Theme.outline
-                                                }
-                                                // Cursor text
-                                                Rectangle {
-                                                    width: 12; height: 12; radius: 2
-                                                    color: parent.parent.parent.itemThemeColors.cursorText
-                                                    border.width: 1; border.color: Theme.outline
-                                                }
-                                                // Selection bg
-                                                Rectangle {
-                                                    width: 12; height: 12; radius: 2
-                                                    color: parent.parent.parent.itemThemeColors.selectionBackground
-                                                    border.width: 1; border.color: Theme.outline
-                                                }
-                                                // Selection fg
-                                                Rectangle {
-                                                    width: 12; height: 12; radius: 2
-                                                    color: parent.parent.parent.itemThemeColors.selectionForeground
-                                                    border.width: 1; border.color: Theme.outline
-                                                }
-
-                                                // Divider
-                                                Rectangle {
-                                                    width: 1; height: 12
-                                                    color: Theme.outline
-                                                    anchors.verticalCenter: parent.verticalCenter
-                                                }
-
-                                                // Full 16-color palette (8 colors visible, smaller)
-                                                Repeater {
-                                                    model: 8
-
-                                                    Rectangle {
-                                                        width: 10; height: 12; radius: 2
-                                                        color: parent.parent.parent.itemThemeColors.palette[index] || "#888888"
-                                                        border.width: 1; border.color: Theme.outline
-                                                    }
-                                                }
-                                            }
                                         }
 
                                         DankIcon {
-                                            name: "check_circle"; size: 16; color: Theme.primary
+                                            name: "check_circle"; size: 18; color: Theme.primary
                                             visible: modelData.id === root.currentTheme
                                             anchors.verticalCenter: parent.verticalCenter
                                         }
@@ -1165,10 +751,5 @@ PluginComponent {
     popoutWidth: 316
     popoutHeight: 220
 
-    Component.onCompleted: {
-        console.info("DankTerminalTheme loaded:", currentTheme)
-        // Pre-generate theme colors cache via bash
-        var cmd = 'for f in /usr/share/ghostty/themes/*; do name=$(basename "$f"); echo "$name:"; cat "$f"; echo "---END---"; done > /tmp/ghostty_themes_cache.txt'
-        Quickshell.execDetached(["bash", "-c", cmd])
-    }
+    Component.onCompleted: console.info("DankTerminalTheme loaded:", currentTheme)
 }
