@@ -1,85 +1,104 @@
 # Dank Terminal Theme for Dank Material Shell
 
-**Dank Terminal Theme** is a lightweight plugin for Dank Material Shell (DMS) that bridges the gap between desktop aesthetics and terminal environments. It places theme management directly in the user's workflow—the navbar—starting with native support for the Ghostty terminal emulator.
+[![RELEASE](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Feduardez%2FDankTerminalTheme%2Frefs%2Fheads%2Fmain%2Fplugin.json&query=version&style=for-the-badge&label=RELEASE&labelColor=101418&color=9ccbfb)](https://github.com/eduardez/DankTerminalTheme)
+
+A bar widget that lets you manage your Ghostty terminal theme from your desktop, with instant hot-reload and a curated color grid.
+
+![Dank Terminal Theme Screenshot](screenshot.png)
 
 ## Features
 
-- **Navbar Quick-Switcher**: Click the palette icon in the navbar to access the theme gallery
-- **453 Built-in Ghostty Themes**: All themes from Ghostty's theme library
-- **Instant Hot-Reload**: Ghostty themes apply via SIGUSR2 signal without restart
-- **Persistent Selection**: Remembers last selected theme across sessions
+- **Navbar theme picker**: Click the palette icon to open the theme gallery popout
+- **98 curated themes**: 21 hand-picked popular themes + 77 additional, with real color previews
+- **Instant hot-reload**: Ghostty themes apply via `SIGUSR2` signal without restart
+- **Color grid**: See actual background, foreground, and accent colors at a glance
+- **Navigation arrows**: Cycle through themes with prev/next buttons
+- **Persistent selection**: Remembers your last theme across sessions
+- **Configurable grid**: Choose 3, 4, 5, or 6 columns in settings
 
 ## Requirements
 
 - Dank Material Shell (DMS) >= 1.4.0
-- Ghostty terminal emulator (version 1.2.0+ recommended for SIGUSR2 support)
+- Ghostty terminal emulator
 
 ## Installation
 
-1. Copy this folder to `~/.config/DankMaterialShell/plugins/DankTerminalTheme/`
-2. Open DMS Settings → Plugins → Scan for Plugins
-3. Enable "Dank Terminal Theme"
-4. Add to DankBar widget list
-5. Restart DMS: `dms restart`
+### Via DMS
+
+```bash
+dms plugins install DankTerminalTheme
+```
+
+### Via DMS GUI
+
+1. Open DMS Settings (`Mod+,`) and go to the Plugins tab
+2. Click **Browse**
+3. Find **Dank Terminal Theme** and click **Install**
+
+### Manually
+
+```bash
+cd ~/.config/DankMaterialShell/plugins
+git clone https://github.com/eduardez/DankTerminalTheme.git
+```
+
+1. Open DMS Settings (`Mod+,`) and go to the Plugins tab
+2. Click **Scan for plugins**
+3. Enable the **Dank Terminal Theme** plugin
 
 ## Usage
 
-1. Click the Dank Terminal Theme icon (palette) in the navbar to open the theme picker
-2. Use **Prev/Next** arrows or toggle **All** to open grid view
-3. Click any theme to apply it instantly to Ghostty
-4. Ghostty receives the new theme via SIGUSR2 signal and reloads
+### Switching Themes
 
-## Working Principle
+1. Click the palette icon in your navbar to open the theme picker
+2. Click any color swatch in the grid to apply it instantly
+3. The current theme is highlighted with a colored border and indicator dot
 
-Dank Terminal Theme uses Ghostty's native `theme` configuration option to switch between built-in themes. This leverages Ghostty's own theme system directly.
+### Navigation Arrows
 
-### Theme Application Flow
+Use the **prev/next** arrows at the bottom of the popout to cycle through themes sequentially. Arrows can be hidden via settings.
 
-1. User selects a theme in Dank Terminal Theme's navbar popout
-2. Dank Terminal Theme updates `theme = <theme_name>` in Ghostty's config
-3. Dank Terminal Theme sends `SIGUSR2` to all Ghostty processes
-4. Ghostty's signal handler triggers a config reload and applies the new theme
-5. Theme changes apply instantly without restarting Ghostty
+### Grid View
 
-### Available Themes
+The popout shows a color grid with actual background, foreground, and accent color previews. Configure the number of columns in Settings (default: 4).
 
-The plugin provides all 453 Ghostty built-in themes including:
-- **Nord** - Arctic north-inspired colors
-- **Gruvbox Dark** - Retro groove colors
-- **Catppuccin Mocha/Latte/Frappe/Macchiato** - Pastel themes
-- **Dracula** - Dark mode with vibrant colors
-- **TokyoNight** - Japanese night-inspired
-- **Rose Pine** - Subtle purple themes
-- **GitHub Dark/Light** - GitHub's official themes
-- **One Half Dark/Light** - VS Code style
-- And 445 more themes...
+### Settings
 
-### Ghostty Signal Handling
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Show All Themes | Show all 98 themes instead of just the 21 curated ones | Off |
+| Grid Columns | Number of columns in the color grid | 4 |
+| Ghostty Config Path | Custom path to Ghostty config (relative to home) | `~/.config/ghostty/config` |
+| Show Navigation Arrows | Show prev/next arrows in the popout footer | On |
 
-Ghostty handles `SIGUSR2` to trigger configuration reload. This is the recommended method for external applications to trigger theme updates. If SIGUSR2 is not available in your Ghostty version, manually reload with `Ctrl+Shift+,` in Ghostty.
+## How It Works
 
-## Architecture
+The plugin uses Ghostty's native `theme` configuration option to switch between built-in themes.
 
-```
-DankTerminalTheme/
-├── plugin.json           # Plugin manifest (name, author, version, permissions)
-├── DankTerminalTheme.qml            # Main widget component
-│                          # - applyTheme(): sets theme config + signals ghostty
-│                          # - 453 built-in Ghostty themes
-│                          # - Navbar pills (horizontal/vertical)
-│                          # - Popout UI with prev/next/all navigation
-├── DankTerminalThemeSettings.qml    # Settings panel (basic stub)
-└── README.md
-```
+1. User selects a theme in the popout
+2. Plugin removes the old `theme = ` line from Ghostty's config
+3. Appends `theme = <name>` to the config file
+4. Sends `SIGUSR2` to all Ghostty processes to trigger a config reload
+5. Theme applies instantly without restarting Ghostty
+
+If `SIGUSR2` is not available, manually reload with `Ctrl+Shift+,` in Ghostty.
 
 ## Permissions
 
-Dank Terminal Theme requires:
-- `settings_read` / `settings_write` - persist theme selection
-- `process` - update ghostty config and signal Ghostty
+- `settings_read` / `settings_write` - persist theme selection and settings
+- `process` - update Ghostty config and send signals
 
-## Credits
+## Files
 
-- Themes sourced from Ghostty's built-in theme library (iterm2-color-schemes)
-- Plugin: Dank Terminal Theme by EduarD3V
-- Version: 1.0.2
+- `plugin.json` - Plugin manifest
+- `DankTerminalTheme.qml` - Main widget: themes array, color grid popout, apply logic
+- `DankTerminalThemeSettings.qml` - Settings panel
+- `README.md` - This file
+
+## Author
+
+EduarD3V
+
+## License
+
+Same as DankMaterialShell
