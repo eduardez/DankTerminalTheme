@@ -46,33 +46,12 @@ PluginComponent {
         { id: "rose-pine-dawn", name: "Rose Pine Dawn", ghosttyName: "Rose Pine Dawn", bg: "#faf4ed", fg: "#575279", accent: "#d7827e" }
     ]
 
-    readonly property var allThemes: [
-        { id: "nord", name: "Nord", ghosttyName: "Nord", bg: "#2e3440", fg: "#d8dee9", accent: "#88c0d0" },
-        { id: "catppuccin-mocha", name: "Catppuccin Mocha", ghosttyName: "Catppuccin Mocha", bg: "#1e1e2e", fg: "#cdd6f4", accent: "#94e2d5" },
-        { id: "catppuccin-macchiato", name: "Catppuccin Macchiato", ghosttyName: "Catppuccin Macchiato", bg: "#24273a", fg: "#cad3f5", accent: "#8bd5ca" },
-        { id: "catppuccin-frappe", name: "Catppuccin Frappe", ghosttyName: "Catppuccin Frappe", bg: "#303446", fg: "#c6d0f5", accent: "#81c8be" },
-        { id: "catppuccin-latte", name: "Catppuccin Latte", ghosttyName: "Catppuccin Latte", bg: "#eff1f5", fg: "#4c4f69", accent: "#179299" },
-        { id: "tokyonight", name: "TokyoNight", ghosttyName: "TokyoNight", bg: "#1a1b26", fg: "#c0caf5", accent: "#7dcfff" },
-        { id: "tokyonight-storm", name: "TokyoNight Storm", ghosttyName: "TokyoNight Storm", bg: "#24283b", fg: "#c0caf5", accent: "#7dcfff" },
-        { id: "tokyonight-moon", name: "TokyoNight Moon", ghosttyName: "TokyoNight Moon", bg: "#222436", fg: "#c8d3f5", accent: "#86e1fc" },
-        { id: "dracula", name: "Dracula", ghosttyName: "Dracula", bg: "#282a36", fg: "#f8f8f2", accent: "#8be9fd" },
-        { id: "gruvbox-dark", name: "Gruvbox Dark", ghosttyName: "Gruvbox Dark", bg: "#282828", fg: "#ebdbb2", accent: "#689d6a" },
-        { id: "gruvbox-dark-hard", name: "Gruvbox Dark Hard", ghosttyName: "Gruvbox Dark Hard", bg: "#1d2021", fg: "#ebdbb2", accent: "#689d6a" },
+    readonly property var extraThemes: [
         { id: "gruvbox-light", name: "Gruvbox Light", ghosttyName: "Gruvbox Light", bg: "#fbf1c7", fg: "#3c3836", accent: "#689d6a" },
-        { id: "rose-pine", name: "Rose Pine", ghosttyName: "Rose Pine", bg: "#191724", fg: "#e0def4", accent: "#ebbcba" },
-        { id: "rose-pine-moon", name: "Rose Pine Moon", ghosttyName: "Rose Pine Moon", bg: "#232136", fg: "#e0def4", accent: "#ea9a97" },
-        { id: "rose-pine-dawn", name: "Rose Pine Dawn", ghosttyName: "Rose Pine Dawn", bg: "#faf4ed", fg: "#575279", accent: "#d7827e" },
-        { id: "github-dark", name: "GitHub Dark", ghosttyName: "GitHub Dark", bg: "#101216", fg: "#8b949e", accent: "#2b7489" },
         { id: "github-dark-default", name: "GitHub Dark Default", ghosttyName: "GitHub Dark Default", bg: "#0d1117", fg: "#e6edf3", accent: "#39c5cf" },
         { id: "github-light-default", name: "GitHub Light Default", ghosttyName: "GitHub Light Default", bg: "#ffffff", fg: "#1f2328", accent: "#1b7c83" },
-        { id: "monokai-pro", name: "Monokai Pro", ghosttyName: "Monokai Pro", bg: "#2d2a2e", fg: "#fcfcfa", accent: "#78dce8" },
         { id: "monokai-classic", name: "Monokai Classic", ghosttyName: "Monokai Classic", bg: "#272822", fg: "#fdfff1", accent: "#66d9ef" },
-        { id: "kanagawa-wave", name: "Kanagawa Wave", ghosttyName: "Kanagawa Wave", bg: "#1f1f28", fg: "#dcd7ba", accent: "#6a9589" },
-        { id: "kanagawa-dragon", name: "Kanagawa Dragon", ghosttyName: "Kanagawa Dragon", bg: "#181616", fg: "#c5c9c5", accent: "#8ea4a2" },
-        { id: "ayu-mirage", name: "Ayu Mirage", ghosttyName: "Ayu Mirage", bg: "#1f2430", fg: "#cccac2", accent: "#90e1c6" },
         { id: "ayu-light", name: "Ayu Light", ghosttyName: "Ayu Light", bg: "#f8f9fa", fg: "#5c6166", accent: "#46ba94" },
-        { id: "one-dark", name: "One Dark", ghosttyName: "Atom One Dark", bg: "#21252b", fg: "#abb2bf", accent: "#56b6c2" },
-        { id: "everforest-dark-hard", name: "Everforest Dark Hard", ghosttyName: "Everforest Dark Hard", bg: "#1e2326", fg: "#d3c6aa", accent: "#83c092" },
         { id: "adwaita-dark", name: "Adwaita Dark", ghosttyName: "Adwaita Dark", bg: "#1d1d20", fg: "#ffffff", accent: "#0ab9dc" },
         { id: "carbonfox", name: "Carbonfox", ghosttyName: "Carbonfox", bg: "#161616", fg: "#f2f4f8", accent: "#33b1ff" },
         { id: "nightfox", name: "Nightfox", ghosttyName: "Nightfox", bg: "#192330", fg: "#cdcecf", accent: "#63cdcf" },
@@ -146,6 +125,8 @@ PluginComponent {
         { id: "aardvark-blue", name: "Aardvark Blue", ghosttyName: "Aardvark Blue", bg: "#102040", fg: "#dddddd", accent: "#008eb0" }
     ]
 
+    readonly property var allThemes: curatedThemes.concat(extraThemes)
+
     readonly property var themes: showAllThemes ? allThemes : curatedThemes
 
     readonly property var themeMap: {
@@ -204,7 +185,7 @@ PluginComponent {
             id: popout
             showCloseButton: true
 
-            property real cw: root.popoutWidth - Theme.spacingXL
+            property real cw: root.popoutWidth - Theme.spacingL
 
             Column {
                 id: mainCol
