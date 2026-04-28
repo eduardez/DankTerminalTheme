@@ -4,7 +4,12 @@
 
 A bar widget that lets you manage your Ghostty terminal theme from your desktop, with instant hot-reload and a curated color grid.
 
-![Dank Terminal Theme Screenshot](https://github.com/eduardez/DankTerminalTheme/blob/066642bc37d1ed689f4ecb82a3e678e3a8f0532e/assets/screenshot.png)
+![Dank Terminal Theme Screenshot](https://raw.githubusercontent.com/eduardez/DankTerminalTheme/main/assets/screenshot.png)
+
+![Dank Terminal Theme Screenshot1](https://raw.githubusercontent.com/eduardez/DankTerminalTheme/main/assets/screenshot_1.png)
+
+![Dank Terminal Theme Screenshot2](https://raw.githubusercontent.com/eduardez/DankTerminalTheme/main/assets/screenshot_2.png)
+
 
 ## Features
 

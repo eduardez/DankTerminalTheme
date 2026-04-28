@@ -19,7 +19,7 @@ PluginComponent {
     readonly property string ghosttyMainConfig: {
         var customPath = pluginData.ghosttyConfigPath
         if (customPath && customPath.length > 0) return customPath
-        return "~/.config/ghostty/config"
+        return "$HOME/.config/ghostty/config"
     }
 
     readonly property var curatedThemes: [
@@ -156,8 +156,8 @@ PluginComponent {
         if (!t) return
         var ghosttyName = t.ghosttyName
         var bashCmd =
-            "sed -i -e '/^theme = /d' -e '/^config-file = themes\\//d' '" + ghosttyMainConfig + "'; " +
-            "echo 'theme = " + ghosttyName + "' >> '" + ghosttyMainConfig + "'"
+            "sed -i -e '/^theme = /d' -e '/^config-file = themes\\//d' \"" + ghosttyMainConfig + "\"; " +
+            "echo 'theme = " + ghosttyName + "' >> \"" + ghosttyMainConfig + "\""
         Quickshell.execDetached(["bash", "-c", bashCmd])
         Quickshell.execDetached(["bash", "-c", "pkill -SIGUSR2 ghostty 2>/dev/null || true"])
         currentTheme = themeId

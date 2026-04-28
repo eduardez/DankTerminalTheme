@@ -65,9 +65,9 @@ PluginSettings {
     StringSetting {
         settingKey: "ghosttyConfigPath"
         label: "Ghostty Config Path"
-        description: "Path to Ghostty config file (relative to home)"
-        placeholder: ".config/ghostty/config"
-        defaultValue: ".config/ghostty/config"
+        description: "Path to Ghostty config file"
+        placeholder: "$HOME/.config/ghostty/config"
+        defaultValue: "$HOME/.config/ghostty/config"
     }
 
     StyledRect {
