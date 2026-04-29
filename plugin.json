@@ -1,8 +1,8 @@
 {
   "id": "dankterminaltheme",
   "name": "Dank Terminal Theme",
-  "description": "Real-time Ghostty theme management from the navbar",
-  "version": "1.0.4",
+  "description": "Real-time terminal theme management for Ghostty, Kitty, Alacritty, and WezTerm",
+  "version": "2.0.0",
   "author": "EduarD3V",
   "icon": "palette",
   "type": "widget",

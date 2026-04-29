@@ -15,11 +15,30 @@ PluginSettings {
     }
 
     StyledText {
-        text: "Real-time Ghostty theme management with 98 built-in themes"
+        text: "Real-time terminal theme management supporting Ghostty, Kitty, Alacritty, and WezTerm with 76 built-in themes"
         font.pixelSize: Theme.fontSizeSmall
         color: Theme.surfaceVariantText
         width: parent.width
         wrapMode: Text.WordWrap
+    }
+
+    StyledRect {
+        width: parent.width
+        height: 1
+        color: Theme.surfaceVariant
+    }
+    
+    SelectionSetting {
+        settingKey: "terminal"
+        label: "Terminal Emulator"
+        description: "Select which terminal emulator to theme"
+        options: [
+            { label: "Ghostty", value: "ghostty" },
+            { label: "Kitty", value: "kitty" },
+            { label: "Alacritty", value: "alacritty" },
+            { label: "WezTerm", value: "wezterm" }
+        ]
+        defaultValue: "ghostty"
     }
 
     StyledRect {
@@ -38,14 +57,14 @@ PluginSettings {
     ToggleSetting {
         settingKey: "showAllThemes"
         label: "Show All Themes"
-        description: "Show all 98 themes instead of the curated 21"
+        description: "Show all 76 themes instead of the curated 21"
         defaultValue: false
     }
 
     ToggleSetting {
         settingKey: "showArrows"
-        label: "Show Navigation Arrows"
-        description: "Show prev/next arrows in the popout footer"
+        label: "Show Footer"
+        description: "Show footer arrows and terminal selector in the popout footer"
         defaultValue: true
     }
 
@@ -60,6 +79,19 @@ PluginSettings {
             { label: "6", value: 6 }
         ]
         defaultValue: "4"
+    }
+
+    StyledRect {
+        width: parent.width
+        height: 1
+        color: Theme.surfaceVariant
+    }
+
+    StyledText {
+        text: "Config Paths"
+        font.pixelSize: Theme.fontSizeMedium
+        font.weight: Font.DemiBold
+        color: Theme.surfaceText
     }
 
     StringSetting {
@@ -84,7 +116,7 @@ PluginSettings {
     }
 
     StyledText {
-        text: "• Click the palette icon in the bar to open the theme picker\n• Use arrows to cycle through themes\n• Click a color swatch to apply that theme\n• Themes apply instantly via SIGUSR2 signal to Ghostty"
+        text: "• Select your terminal emulator in the popout or settings\n• Click a color swatch to apply that theme\n• Use arrows to cycle through themes\n• Ghostty: applies via config + SIGUSR2 signal\n• Kitty: applies via kitten themes --reload-in=all\n• Alacritty: swaps theme symlinks (requires alacritty-theme repo)\n• WezTerm: updates color_scheme in Lua config"
         font.pixelSize: Theme.fontSizeSmall
         color: Theme.surfaceVariantText
         width: parent.width
